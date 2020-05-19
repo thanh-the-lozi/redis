@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"time"
 
 	"github.com/go-redis/redis"
 )
@@ -18,20 +19,18 @@ var client *redis.Client
 func ConnectRedis() {
 	client = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Password: "",
+		DB:       0,
 	})
 
 	pong, err := client.Ping().Result()
 	fmt.Println(pong, err)
-	// Output: PONG <nil>
 }
 
-func ExampleSetKey(key string, value interface{}) {
+func ExampleSetKey(key string, value interface{}, expire time.Duration) {
 	v, _ := json.Marshal(value)
 
-	/* func (c cmdable) Set(key string, value interface{}, expiration time.Duration) *StatusCmd */
-	err := client.Set(key, v, 0).Err()
+	err := client.Set(key, v, expire).Err()
 	if err != nil {
 		panic(err)
 	}
@@ -64,6 +63,6 @@ func main() {
 	value := People{Name: "name", Age: 12}
 
 	ConnectRedis()
-	ExampleSetKey(key, value)
+	ExampleSetKey(key, value, 0)
 	ExampleGetKey(key)
 }
