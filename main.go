@@ -1,5 +1,4 @@
 package main
-
 import (
 	"encoding/json"
 	"fmt"
@@ -55,7 +54,7 @@ func ExampleGetKey(key string) {
 	json.Unmarshal([]byte(val), &j)
 
 	fmt.Println(key, j)
-	fmt.Println("type", reflect.TypeOf(client))
+	fmt.Println("type", reflect.TypeOf(j))
 }
 
 func main() {
